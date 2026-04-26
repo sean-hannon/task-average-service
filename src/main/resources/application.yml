@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: task-average-service
+  datasource:
+    url: ${TASK_METRICS_DB_URL:jdbc:postgresql://localhost:5432/task_metrics}
+    username: ${TASK_METRICS_DB_USERNAME:task_metrics}
+    password: ${TASK_METRICS_DB_PASSWORD:task_metrics}
+    driver-class-name: ${TASK_METRICS_DB_DRIVER:org.postgresql.Driver}
+    hikari:
+      maximum-pool-size: ${TASK_METRICS_DB_POOL_SIZE:10}
+      minimum-idle: ${TASK_METRICS_DB_MIN_IDLE:1}
+  flyway:
+    enabled: true
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+
+server:
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true

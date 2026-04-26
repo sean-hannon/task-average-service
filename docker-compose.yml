@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: task_metrics
+      POSTGRES_USER: task_metrics
+      POSTGRES_PASSWORD: task_metrics
+    ports:
+      - "5432:5432"
+    volumes:
+      - task-average-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U task_metrics -d task_metrics"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+  task-average-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: task-average-service:local
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      TASK_METRICS_DB_URL: jdbc:postgresql://postgres:5432/task_metrics
+      TASK_METRICS_DB_USERNAME: task_metrics
+      TASK_METRICS_DB_PASSWORD: task_metrics
+      TASK_METRICS_DB_DRIVER: org.postgresql.Driver
+    restart: unless-stopped
+
+volumes:
+  task-average-postgres-data:
