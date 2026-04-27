@@ -8,7 +8,7 @@ RESTful Spring Boot service that continuously tracks the average duration of nam
 - Persists the aggregate rows in a relational database, so averages are available after restart.
 - Uses Flyway migrations for schema management.
 - Uses constant-time writes and reads; no historical event replay is needed.
-- Uses PostgreSQL for durable storage in local Docker Compose and production-like deployments.
+- Uses PostgreSQL for durable storage in local Docker Compose.
 - Exposes Spring Boot Actuator health and metrics endpoints.
 
 ## API
